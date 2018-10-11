@@ -14,8 +14,4 @@ public interface AuthenticationService {
     JwtAuthenticationResponse authenticate(@Valid LoginRequest user);
 
     ApiResponse register(@Valid SignUpRequest user);
-
-    boolean existsByEmail(String email);
-
-    boolean existsUsername(String username);
 }

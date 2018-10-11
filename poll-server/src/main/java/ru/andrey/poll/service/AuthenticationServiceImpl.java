@@ -27,14 +27,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
 
     @Autowired
-    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider) {
+    public AuthenticationServiceImpl(AuthenticationManager authenticationManager,
+                                     UserRepository userRepository,
+                                     UserService userService,
+                                     RoleRepository roleRepository,
+                                     PasswordEncoder passwordEncoder,
+                                     JwtTokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.userService = userService;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
@@ -57,24 +64,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ApiResponse register(@Valid SignUpRequest user) {
-        if (existsUsername(user.getUsername())) {
+        if (userService.existsUsername(user.getUsername()).isAvailable()) {
             return ApiResponse.error("Username is already taken");
         }
-        if (existsByEmail(user.getEmail())) {
+        if (userService.existsByEmail(user.getEmail()).isAvailable()) {
             return ApiResponse.error("Email address already in use");
         }
         createUser(user);
         return ApiResponse.ok("User registered successfully");
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean existsUsername(String username) {
-        return userRepository.existsByUsername(username);
     }
 
     private void createUser(SignUpRequest request) {
