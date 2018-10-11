@@ -16,15 +16,15 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     @Query("SELECT new ru.andrey.poll.model.ChoiceVoteCount(v.choice.id, COUNT(v.id)) " +
             "FROM Vote v " +
-            "WHERE v.poll.id IN :pollIds " +
+            "WHERE v.poll.id IN :pollId " +
             "GROUP BY v.choice.id")
-    ChoiceVoteCount countByPollIdGroupByChoiceId(@Param("pollId") Long pollId);
+    List<ChoiceVoteCount> countByPollIdInGroupByChoiceId(@Param("pollIds") List<Long> pollIds);
 
     @Query("SELECT new ru.andrey.poll.model.ChoiceVoteCount(v.choice.id, COUNT(v.id)) " +
             "FROM Vote v " +
             "WHERE v.poll.id = :pollIds " +
             "GROUP BY v.choice.id")
-    List<ChoiceVoteCount> countByPollIdInGroupByChoiceId(@Param("pollIds") List<Long> pollIds);
+    List<ChoiceVoteCount> countByPollIdGroupByChoiceId(@Param("pollIds") Long pollId);
 
     @Query("SELECT v " +
             "FROM Vote v " +
