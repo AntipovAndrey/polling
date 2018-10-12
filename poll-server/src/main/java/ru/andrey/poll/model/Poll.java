@@ -41,7 +41,7 @@ public class Poll extends UserDateAudit {
     private List<Choice> choices = new ArrayList<>();
 
     @NotNull
-    private Instant expirationDate;
+    private Instant expirationDateTime;
 
     public boolean addChoice(Choice choice) {
         if (choice == null || choice.getText() == null) {

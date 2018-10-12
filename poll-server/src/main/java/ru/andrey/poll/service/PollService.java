@@ -19,7 +19,7 @@ public interface PollService {
 
     PollResponse getPollById(Long pollId, UserPrincipal currentUser);
 
-    PollResponse vote(Long pollId, VoteRequest voteRequest, UserPrincipal userPrincipal);
+    PollResponse vote(Long pollId, VoteRequest voteRequest, UserPrincipal currentUser);
 
     PollSummary createPoll(PollRequest pollRequest);
 }

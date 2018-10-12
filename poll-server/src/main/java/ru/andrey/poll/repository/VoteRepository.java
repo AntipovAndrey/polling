@@ -16,15 +16,15 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     @Query("SELECT new ru.andrey.poll.model.ChoiceVoteCount(v.choice.id, COUNT(v.id)) " +
             "FROM Vote v " +
-            "WHERE v.poll.id IN :pollId " +
+            "WHERE v.poll.id IN :pollIds " +
             "GROUP BY v.choice.id")
     List<ChoiceVoteCount> countByPollIdInGroupByChoiceId(@Param("pollIds") List<Long> pollIds);
 
     @Query("SELECT new ru.andrey.poll.model.ChoiceVoteCount(v.choice.id, COUNT(v.id)) " +
             "FROM Vote v " +
-            "WHERE v.poll.id = :pollIds " +
+            "WHERE v.poll.id = :pollId " +
             "GROUP BY v.choice.id")
-    List<ChoiceVoteCount> countByPollIdGroupByChoiceId(@Param("pollIds") Long pollId);
+    List<ChoiceVoteCount> countByPollIdGroupByChoiceId(@Param("pollId") Long pollId);
 
     @Query("SELECT v " +
             "FROM Vote v " +
@@ -33,7 +33,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     @Query("SELECT v " +
             "FROM Vote v " +
-            "WHERE v.user.id = :userId AND v.poll.id IN :pollId")
+            "WHERE v.user.id = :userId AND v.poll.id IN :pollIds")
     List<Vote> findByUserIdAndPollIdIn(@Param("userId") Long userId, @Param("pollIds") List<Long> pollIds);
 
     @Query("SELECT COUNT(v.id) " +
