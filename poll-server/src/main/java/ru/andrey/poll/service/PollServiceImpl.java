@@ -230,13 +230,23 @@ public class PollServiceImpl implements PollService {
     }
 
     private PagedResponse<PollResponse> pollsWithContent(Page<Poll> polls, List<PollResponse> content) {
-        Poll last = polls.getContent().get(polls.getContent().size() - 1);
+        Long last;
+        if (polls.isLast()) {
+            last = null;
+        } else {
+            last = polls.getContent().get(polls.getContent().size() - 1).getId();
+        }
 
-        return getPollResponsePagedResponse(polls, content, last == null ? null : last.getId());
+        return getPollResponsePagedResponse(polls, content, last);
     }
 
     private PagedResponse<PollResponse> idsWithContent(Page<Long> polls, List<PollResponse> content) {
-        Long last = polls.getContent().get(polls.getContent().size() - 1);
+        Long last;
+        if (polls.isLast()) {
+            last = null;
+        } else {
+            last = polls.getContent().get(polls.getContent().size() - 1);
+        }
 
         return getPollResponsePagedResponse(polls, content, last);
     }
@@ -244,9 +254,6 @@ public class PollServiceImpl implements PollService {
     private PagedResponse<PollResponse> getPollResponsePagedResponse(Page<?> polls,
                                                                      List<PollResponse> content,
                                                                      Long next) {
-        if (polls.isLast()) {
-            next = null;
-        }
         return PagedResponse.<PollResponse>builder()
                 .content(content)
                 .remaining(polls.getTotalElements())
