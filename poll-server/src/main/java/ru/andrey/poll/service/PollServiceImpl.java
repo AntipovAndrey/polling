@@ -57,7 +57,14 @@ public class PollServiceImpl implements PollService {
     public PagedResponse<PollResponse> getAllPolls(UserPrincipal currentUser, int page, int size) {
         validatePageNumberAndSize(page, size);
         Pageable pageable = pageableByCreatedAt(page, size);
-        Page<Poll> polls = pollRepository.findAll(pageable);
+        Page<Poll> polls;
+        if (page == 0) {
+            polls = pollRepository.findAll(pageableByCreatedAt(0, size));
+        } else {
+            polls = pollRepository.findAllByIdLessThan((long) page, pageableByCreatedAt(0, size));
+        }
+
+        System.out.println(pageable);
 
         if (polls.getNumberOfElements() == 0) {
             return pollsWithContent(polls, Collections.emptyList());
@@ -89,7 +96,7 @@ public class PollServiceImpl implements PollService {
         Page<Long> userVotedPollIds = voteRepository.findVotedPollIdsByUserId(user.getId(), pageable);
 
         if (userVotedPollIds.getNumberOfElements() == 0) {
-            return pollsWithContent(userVotedPollIds, Collections.emptyList());
+            return idsWithContent(userVotedPollIds, Collections.emptyList());
         }
 
         List<Long> pollIds = userVotedPollIds.getContent();
@@ -106,7 +113,7 @@ public class PollServiceImpl implements PollService {
                 pollUserVoteMap.getOrDefault(poll.getId(), null),
                 choiceVoteCountMap)).collect(Collectors.toList());
 
-        return pollsWithContent(userVotedPollIds, pollResponses);
+        return idsWithContent(userVotedPollIds, pollResponses);
     }
 
     @Override
@@ -222,14 +229,29 @@ public class PollServiceImpl implements PollService {
         }
     }
 
-    private PagedResponse<PollResponse> pollsWithContent(Page<?> polls, List<PollResponse> content) {
+    private PagedResponse<PollResponse> pollsWithContent(Page<Poll> polls, List<PollResponse> content) {
+        Poll last = polls.getContent().get(polls.getContent().size() - 1);
+
+        return getPollResponsePagedResponse(polls, content, last == null ? null : last.getId());
+    }
+
+    private PagedResponse<PollResponse> idsWithContent(Page<Long> polls, List<PollResponse> content) {
+        Long last = polls.getContent().get(polls.getContent().size() - 1);
+
+        return getPollResponsePagedResponse(polls, content, last);
+    }
+
+    private PagedResponse<PollResponse> getPollResponsePagedResponse(Page<?> polls,
+                                                                     List<PollResponse> content,
+                                                                     Long next) {
+        if (polls.isLast()) {
+            next = null;
+        }
         return PagedResponse.<PollResponse>builder()
                 .content(content)
-                .page(polls.getNumber())
-                .size(polls.getSize())
-                .totalElements(polls.getTotalElements())
-                .totalPages(polls.getTotalPages())
+                .remaining(polls.getTotalElements())
                 .last(polls.isLast())
+                .next(next)
                 .build();
     }
 

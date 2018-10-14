@@ -1,5 +1,6 @@
 package ru.andrey.poll.payload;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -12,9 +13,9 @@ import java.util.List;
 public class PagedResponse<T> {
 
     private List<T> content;
-    private int page;
-    private int size;
-    private long totalElements;
-    private int totalPages;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long next;
+    private long remaining;
     private boolean last;
 }

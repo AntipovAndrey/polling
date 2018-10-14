@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Long> {
 
+    Page<Poll> findAllByIdLessThan(Long id, Pageable pageable);
+
     Page<Poll> findByCreatedBy(Long userId, Pageable pageable);
 
     long countByCreatedBy(Long userId);
