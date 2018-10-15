@@ -57,7 +57,7 @@ public class UserController {
                                                          @CurrentUser UserPrincipal currentUser,
                                                          @RequestParam(
                                                                  value = "page",
-                                                                 defaultValue = Constants.DEFAULT_PAGE_NUMBER
+                                                                 defaultValue = Constants.FIRST_PAGE_S_NEXT
                                                          ) int page,
                                                          @RequestParam(
                                                                  value = "size",
@@ -71,7 +71,7 @@ public class UserController {
                                                        @CurrentUser UserPrincipal currentUser,
                                                        @RequestParam(
                                                                value = "page",
-                                                               defaultValue = Constants.DEFAULT_PAGE_NUMBER
+                                                               defaultValue = Constants.FIRST_PAGE_S_NEXT
                                                        ) int page,
                                                        @RequestParam(
                                                                value = "size",

@@ -33,8 +33,8 @@ public class PollController {
     @GetMapping
     public PagedResponse<PollResponse> getPolls(@CurrentUser UserPrincipal currentUser,
                                                 @RequestParam(
-                                                        value = "page",
-                                                        defaultValue = Constants.DEFAULT_PAGE_NUMBER
+                                                        value = "next",
+                                                        defaultValue = Constants.FIRST_PAGE_S_NEXT
                                                 ) int page,
                                                 @RequestParam(
                                                         value = "size",
