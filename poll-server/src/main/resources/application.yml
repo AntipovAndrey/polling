@@ -23,4 +23,4 @@ spring:
 app:
   jwt:
     secret: JwtSecretKey
-    expiration: 10000
+    expiration: 100000
