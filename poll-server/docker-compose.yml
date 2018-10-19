@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  docker-mysql:
+    image: mysql:5.7
+    environment:
+    - MYSQL_DATABASE=polling
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_USER=poll_user
+    - MYSQL_PASSWORD=poll_password
+    - MYSQL_ROOT_HOST=%
+    volumes:
+    - /poll/db/mysql
+    ports:
+    - "3306:3307"
+
+  app:
+    image: poll-spring-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+    - docker-mysql
+    volumes:
+    - /poll/app
+    expose:
+    - "8080"
+    environment:
+    - DATABASE_HOST=docker-mysql
+    - DATABASE_USER=poll_user
+    - DATABASE_PASSWORD=poll_password
+    - DATABASE_NAME=polling
+    - DATABASE_PORT=3306
