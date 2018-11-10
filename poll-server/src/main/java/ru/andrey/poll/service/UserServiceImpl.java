@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.andrey.poll.exception.ResourceNotFoundException;
 import ru.andrey.poll.model.User;
-import ru.andrey.poll.payload.user.UserIdentityAvailability;
+import ru.andrey.poll.payload.user.UserIdentityExistence;
 import ru.andrey.poll.payload.user.UserProfile;
 import ru.andrey.poll.payload.user.UserSummary;
 import ru.andrey.poll.repository.PollRepository;
@@ -32,13 +32,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserIdentityAvailability existsByEmail(String email) {
-        return UserIdentityAvailability.of(userRepository.existsByEmail(email));
+    public UserIdentityExistence existsByEmail(String email) {
+        return UserIdentityExistence.of(userRepository.existsByEmail(email));
     }
 
     @Override
-    public UserIdentityAvailability existsUsername(String username) {
-        return UserIdentityAvailability.of(userRepository.existsByUsername(username));
+    public UserIdentityExistence existsUsername(String username) {
+        return UserIdentityExistence.of(userRepository.existsByUsername(username));
     }
 
     @Override

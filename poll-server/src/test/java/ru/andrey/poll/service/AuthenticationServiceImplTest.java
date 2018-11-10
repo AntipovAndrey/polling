@@ -13,7 +13,7 @@ import ru.andrey.poll.model.Role;
 import ru.andrey.poll.model.RoleName;
 import ru.andrey.poll.model.User;
 import ru.andrey.poll.payload.signup.SignUpRequest;
-import ru.andrey.poll.payload.user.UserIdentityAvailability;
+import ru.andrey.poll.payload.user.UserIdentityExistence;
 import ru.andrey.poll.repository.RoleRepository;
 import ru.andrey.poll.repository.UserRepository;
 import ru.andrey.poll.security.JwtTokenProvider;
@@ -50,23 +50,23 @@ class AuthenticationServiceImplTest {
     private AuthenticationServiceImpl authenticationService;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    private void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
     @Nested
     class TestRegister {
 
-        private UserIdentityAvailability available;
-        private UserIdentityAvailability notAvailable;
+        private UserIdentityExistence exists;
+        private UserIdentityExistence notExists;
         private SignUpRequest signUpRequest;
 
         private Role userRole;
 
         @BeforeEach
-        public void setUp() throws Exception {
-            available = UserIdentityAvailability.of(true);
-            notAvailable = UserIdentityAvailability.of(false);
+        private void setUp() throws Exception {
+            exists = UserIdentityExistence.of(true);
+            notExists = UserIdentityExistence.of(false);
 
             userRole = new Role() {{
                 setName(RoleName.ROLE_USER);
@@ -86,13 +86,13 @@ class AuthenticationServiceImplTest {
         class UserNotExists {
 
             @BeforeEach
-            public void setUp() throws Exception {
-                when(userService.existsUsername(signUpRequest.getUsername())).thenReturn(notAvailable);
-                when(userService.existsByEmail(signUpRequest.getEmail())).thenReturn(notAvailable);
+            private void setUp() throws Exception {
+                when(userService.existsUsername(signUpRequest.getUsername())).thenReturn(notExists);
+                when(userService.existsByEmail(signUpRequest.getEmail())).thenReturn(notExists);
             }
 
             @Test
-            public void whenUserNotExistsThenCreateUser() {
+            void whenUserNotExistsThenCreateUser() {
                 assertThat(authenticationService.register(signUpRequest).getSuccess(), is(true));
 
                 verify(passwordEncoder).encode(signUpRequest.getPassword());
@@ -108,9 +108,9 @@ class AuthenticationServiceImplTest {
         class UserExists {
 
             @Test
-            public void whenUserExistsByUsernameThenAbort() {
-                when(userService.existsUsername(signUpRequest.getUsername())).thenReturn(available);
-                when(userService.existsByEmail(signUpRequest.getEmail())).thenReturn(notAvailable);
+            void whenUserExistsByUsernameThenAbort() {
+                when(userService.existsUsername(signUpRequest.getUsername())).thenReturn(exists);
+                when(userService.existsByEmail(signUpRequest.getEmail())).thenReturn(notExists);
 
                 assertThat(authenticationService.register(signUpRequest).getSuccess(), is(false));
 
@@ -118,9 +118,9 @@ class AuthenticationServiceImplTest {
             }
 
             @Test
-            public void whenUserExistsByEmailThenAbort() {
-                when(userService.existsUsername(signUpRequest.getUsername())).thenReturn(notAvailable);
-                when(userService.existsByEmail(signUpRequest.getEmail())).thenReturn(available);
+            void whenUserExistsByEmailThenAbort() {
+                when(userService.existsUsername(signUpRequest.getUsername())).thenReturn(notExists);
+                when(userService.existsByEmail(signUpRequest.getEmail())).thenReturn(exists);
 
                 assertThat(authenticationService.register(signUpRequest).getSuccess(), is(false));
 

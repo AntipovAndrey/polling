@@ -5,7 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.andrey.poll.payload.PagedResponse;
 import ru.andrey.poll.payload.poll.PollResponse;
-import ru.andrey.poll.payload.user.UserIdentityAvailability;
+import ru.andrey.poll.payload.user.UserIdentityExistence;
 import ru.andrey.poll.payload.user.UserProfile;
 import ru.andrey.poll.payload.user.UserSummary;
 import ru.andrey.poll.security.CurrentUser;
@@ -38,12 +38,12 @@ public class UserController {
     }
 
     @GetMapping("/api/user/checkUsernameAvailability")
-    public UserIdentityAvailability checkUsernameAvailability(@RequestParam("username") String username) {
+    public UserIdentityExistence checkUsernameAvailability(@RequestParam("username") String username) {
         return userService.existsUsername(username);
     }
 
     @GetMapping("/api/user/checkEmailAvailability")
-    public UserIdentityAvailability checkEmailAvailability(@RequestParam("email") String email) {
+    public UserIdentityExistence checkEmailAvailability(@RequestParam("email") String email) {
         return userService.existsByEmail(email);
     }
 

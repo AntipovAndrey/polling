@@ -1,7 +1,7 @@
 package ru.andrey.poll.service;
 
 import org.springframework.stereotype.Service;
-import ru.andrey.poll.payload.user.UserIdentityAvailability;
+import ru.andrey.poll.payload.user.UserIdentityExistence;
 import ru.andrey.poll.payload.user.UserProfile;
 import ru.andrey.poll.payload.user.UserSummary;
 
@@ -10,9 +10,9 @@ import java.util.List;
 @Service
 public interface UserService {
 
-    UserIdentityAvailability existsByEmail(String email);
+    UserIdentityExistence existsByEmail(String email);
 
-    UserIdentityAvailability existsUsername(String username);
+    UserIdentityExistence existsUsername(String username);
 
     UserProfile getPublicProfile(String username);
 

@@ -7,12 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserIdentityAvailability {
+public class UserIdentityExistence {
 
     private Boolean available;
 
-    public static UserIdentityAvailability of(Boolean available) {
-        return new UserIdentityAvailability(available);
+    public static UserIdentityExistence of(Boolean available) {
+        return new UserIdentityExistence(available);
     }
 
     public void setAvailable(Boolean available) {
